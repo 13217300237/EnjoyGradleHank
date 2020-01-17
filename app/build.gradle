@@ -16,7 +16,6 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
-
     // 配置签名文件
     signingConfigs {
         debug {
@@ -49,7 +48,11 @@ android {
             debuggable false
             signingConfig signingConfigs.release
         }
+    }
 
+    lintOptions {
+        checkReleaseBuilds false
+        abortOnError false
     }
 
     //level 2: 通过productFlavors打包配置，实现多维度风味打包
@@ -90,11 +93,43 @@ android {
             manifestPlaceholders = [themeColor: "blue"]
         }
     }
+
+
+    //level3
+    applicationVariants.all { variant ->
+        //这个修改输出的APK路径
+        if (variant.buildType.name != "debug") {//防止AS无法安装debug包(apk)
+            variant.getPackageApplication().outputDirectory = new File(myPackageDir())
+        }
+        variant.getPackageApplication().outputScope.apkDatas.forEach { apkData ->
+            //这个修改输出APK的文件名
+            apkData.outputFileName = "${appNamePrefix()}" +
+                    variant.versionName + "_" +
+                    "${releaseTime()}" + "_" +
+                    variant.flavorName + "_" +
+                    variant.buildType.name + "_" +
+                    ".apk"
+        }
+    }
+}
+
+def myPackageDir(){
+    return "C:\\Users\\adminstrator\\Desktop\\myPackage"
+}
+
+def appNamePrefix() {
+    return "HankZhou"
+}
+
+String releaseTime() {
+    Date date = new Date()
+    String dates = date.format("yyyyMMdd_hhmmss", TimeZone.getTimeZone("UTC"))
+    return dates
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'

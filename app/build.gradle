@@ -96,20 +96,28 @@ android {
 
 
     //level3
+    // 改变apk的输出路径（支持绝对路径）  方式1
+//    applicationVariants.all { variant ->
+//        //这个修改输出的APK路径
+//        if (variant.buildType.name != "debug") {//防止AS无法安装debug包(apk)
+//            variant.getPackageApplication().outputDirectory = new File(myPackageDir())
+//        }
+//        variant.getPackageApplication().outputScope.apkDatas.forEach { apkData ->
+//            //这个修改输出APK的文件名
+//            apkData.outputFileName = "${appNamePrefix()}" +
+//                    variant.versionName + "_" +
+//                    "${releaseTime()}" + "_" +
+//                    variant.flavorName + "_" +
+//                    variant.buildType.name + "_" +
+//                    ".apk"
+//        }
+//    }
+
+    // 或者，使用这种方式，只支持相对路径
     applicationVariants.all { variant ->
-        //这个修改输出的APK路径
-        if (variant.buildType.name != "debug") {//防止AS无法安装debug包(apk)
-            variant.getPackageApplication().outputDirectory = new File(myPackageDir())
-        }
-        variant.getPackageApplication().outputScope.apkDatas.forEach { apkData ->
-            //这个修改输出APK的文件名
-            apkData.outputFileName = "${appNamePrefix()}" +
-                    variant.versionName + "_" +
-                    "${releaseTime()}" + "_" +
-                    variant.flavorName + "_" +
-                    variant.buildType.name + "_" +
-                    ".apk"
-        }
+        String time = new Date().format('yyyyMMdd_HHmmss')
+        String pkgName = "enjoy_${time}_v${defaultConfig.versionName}_${buildType.name}_${flavorName}.apk"
+        outputs.first().outputFileName = "../../../${pkgName}" // 它不能使用绝对路径，也就是说可以使用项目的相对路径
     }
 }
 

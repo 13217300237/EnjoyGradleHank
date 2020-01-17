@@ -52,6 +52,44 @@ android {
 
     }
 
+    //level 2: 通过productFlavors打包配置，实现多维度风味打包
+    flavorDimensions "zone", "themeColor"
+    // 定义多风味
+    productFlavors {
+        /**
+         * 越南版  每一个风味选项都必须指定独立的风味值
+         */
+        vn {
+            applicationId "com.global.vn.ftint"
+            dimension "zone"
+            manifestPlaceholders = [zone: "vn"]
+        }
+
+        /**
+         * 国内版
+         */
+        cn {
+            applicationId "com.global.cn.ftint"
+            dimension "zone"
+            manifestPlaceholders = [zone: "cn"]
+        }
+
+        /**
+         * 主题风格为红色
+         */
+        red {
+            dimension "themeColor"
+            manifestPlaceholders = [themeColor: "red"]
+        }
+
+        /**
+         * 主题风格为蓝色
+         */
+        blue {
+            dimension "themeColor"
+            manifestPlaceholders = [themeColor: "blue"]
+        }
+    }
 }
 
 dependencies {
